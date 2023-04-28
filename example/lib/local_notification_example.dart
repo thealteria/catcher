@@ -85,13 +85,15 @@ class NotificationReportMode extends ReportMode {
   void _initializeNotificationsPlugin() {
     _flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var initializationSettingsAndroid = new AndroidInitializationSettings(icon);
-    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettingsIOS = new DarwinInitializationSettings();
     var initializationSettings = new InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
-    _flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectedNotification);
+    _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onSelectedNotification,
+    );
   }
 
   @override
@@ -100,21 +102,22 @@ class NotificationReportMode extends ReportMode {
     _sendNotification();
   }
 
-  Future onSelectedNotification(String? payload) {
+  Future onSelectedNotification(NotificationResponse? payload) {
     onActionConfirmed(_lastReport);
     return Future<int>.value(0);
   }
 
   void _sendNotification() async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+    final androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         channelId, channelName,
         channelDescription: channelDescription,
         importance: Importance.defaultImportance,
         priority: Priority.defaultPriority);
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: iOSPlatformChannelSpecifics);
+    final iOSPlatformChannelSpecifics = new DarwinNotificationDetails();
+    final platformChannelSpecifics = new NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics,
+    );
 
     await _flutterLocalNotificationsPlugin.show(
         0,

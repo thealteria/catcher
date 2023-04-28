@@ -14,8 +14,8 @@ class HttpHandler extends ReportHandler {
   final HttpRequestType requestType;
   final Uri endpointUri;
   final Map<String, dynamic> headers;
-  final int requestTimeout;
-  final int responseTimeout;
+  final Duration? requestTimeout;
+  final Duration? responseTimeout;
   final bool printLogs;
   final bool enableDeviceParameters;
   final bool enableApplicationParameters;
@@ -26,8 +26,8 @@ class HttpHandler extends ReportHandler {
     this.requestType,
     this.endpointUri, {
     Map<String, dynamic>? headers,
-    this.requestTimeout = 5000,
-    this.responseTimeout = 5000,
+    this.requestTimeout,
+    this.responseTimeout,
     this.printLogs = false,
     this.enableDeviceParameters = true,
     this.enableApplicationParameters = true,
@@ -37,11 +37,9 @@ class HttpHandler extends ReportHandler {
 
   @override
   Future<bool> handle(Report error, BuildContext? context) async {
-    if (error.platformType != PlatformType.web) {
-      if (!(await CatcherUtils.isInternetConnectionAvailable())) {
-        _printLog("No internet connection available");
-        return false;
-      }
+    if (!(await CatcherUtils.isInternetConnectionAvailable())) {
+      _printLog("No internet connection available");
+      return false;
     }
 
     if (requestType == HttpRequestType.post) {
@@ -65,8 +63,8 @@ class HttpHandler extends ReportHandler {
       }
 
       final Options options = Options(
-        sendTimeout: requestTimeout,
-        receiveTimeout: responseTimeout,
+        sendTimeout: requestTimeout ?? Duration(milliseconds: 5000),
+        receiveTimeout: responseTimeout ?? Duration(milliseconds: 5000),
         headers: mutableHeaders,
       );
 
@@ -115,9 +113,5 @@ class HttpHandler extends ReportHandler {
   List<PlatformType> getSupportedPlatforms() => [
         PlatformType.android,
         PlatformType.iOS,
-        PlatformType.web,
-        PlatformType.linux,
-        PlatformType.macOS,
-        PlatformType.windows,
       ];
 }

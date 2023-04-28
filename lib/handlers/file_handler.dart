@@ -149,9 +149,6 @@ class FileHandler extends ReportHandler {
   List<PlatformType> getSupportedPlatforms() => [
         PlatformType.android,
         PlatformType.iOS,
-        PlatformType.linux,
-        PlatformType.macOS,
-        PlatformType.windows,
       ];
 
   @override

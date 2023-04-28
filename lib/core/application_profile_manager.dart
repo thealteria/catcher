@@ -19,21 +19,9 @@ class ApplicationProfileManager {
     return ApplicationProfile.debug;
   }
 
-  /// Check if current platform is web
-  static bool isWeb() => kIsWeb;
-
   /// Check if current platform is android
   static bool isAndroid() => Platform.isAndroid;
 
   /// Check if current platform is ios
   static bool isIos() => Platform.isIOS;
-
-  ///Check if current platform is linux
-  static bool isLinux() => Platform.isLinux;
-
-  ///Check if current platform is windows
-  static bool isWindows() => Platform.isWindows;
-
-  ///Check if current platform is macOS
-  static bool isMacOS() => Platform.isMacOS;
 }

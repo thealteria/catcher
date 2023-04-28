@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:isolate';
 
 import 'package:catcher/core/application_profile_manager.dart';
@@ -188,18 +187,15 @@ class Catcher with ReportModeAction {
       _reportError(details.exception, details.stack, errorDetails: details);
     };
 
-    ///Web doesn't have Isolate error listener support
-    if (!ApplicationProfileManager.isWeb()) {
-      Isolate.current.addErrorListener(
-        RawReceivePort((dynamic pair) async {
-          final isolateError = pair as List<dynamic>;
-          _reportError(
-            isolateError.first.toString(),
-            isolateError.last.toString(),
-          );
-        }).sendPort,
-      );
-    }
+    Isolate.current.addErrorListener(
+      RawReceivePort((dynamic pair) async {
+        final isolateError = pair as List<dynamic>;
+        _reportError(
+          isolateError.first.toString(),
+          isolateError.last.toString(),
+        );
+      }).sendPort,
+    );
 
     if (rootWidget != null) {
       _runZonedGuarded(() {
@@ -242,27 +238,7 @@ class Catcher with ReportModeAction {
 
   void _loadDeviceInfo() {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (ApplicationProfileManager.isWeb()) {
-      deviceInfo.webBrowserInfo.then((webBrowserInfo) {
-        _loadWebParameters(webBrowserInfo);
-        _removeExcludedParameters();
-      });
-    } else if (ApplicationProfileManager.isLinux()) {
-      deviceInfo.linuxInfo.then((linuxDeviceInfo) {
-        _loadLinuxParameters(linuxDeviceInfo);
-        _removeExcludedParameters();
-      });
-    } else if (ApplicationProfileManager.isWindows()) {
-      deviceInfo.windowsInfo.then((windowsInfo) {
-        _loadWindowsParameters(windowsInfo);
-        _removeExcludedParameters();
-      });
-    } else if (ApplicationProfileManager.isMacOS()) {
-      deviceInfo.macOsInfo.then((macOsDeviceInfo) {
-        _loadMacOSParameters(macOsDeviceInfo);
-        _removeExcludedParameters();
-      });
-    } else if (ApplicationProfileManager.isAndroid()) {
+    if (ApplicationProfileManager.isAndroid()) {
       deviceInfo.androidInfo.then((androidInfo) {
         _loadAndroidParameters(androidInfo);
         _removeExcludedParameters();
@@ -282,74 +258,6 @@ class Catcher with ReportModeAction {
     _currentConfig.excludedParameters.forEach((parameter) {
       _deviceParameters.remove(parameter);
     });
-  }
-
-  void _loadLinuxParameters(LinuxDeviceInfo linuxDeviceInfo) {
-    try {
-      _deviceParameters["name"] = linuxDeviceInfo.name;
-      _deviceParameters["version"] = linuxDeviceInfo.version;
-      _deviceParameters["id"] = linuxDeviceInfo.id;
-      _deviceParameters["idLike"] = linuxDeviceInfo.idLike;
-      _deviceParameters["versionCodename"] = linuxDeviceInfo.versionCodename;
-      _deviceParameters["versionId"] = linuxDeviceInfo.versionId;
-      _deviceParameters["prettyName"] = linuxDeviceInfo.prettyName;
-      _deviceParameters["buildId"] = linuxDeviceInfo.buildId;
-      _deviceParameters["variant"] = linuxDeviceInfo.variant;
-      _deviceParameters["variantId"] = linuxDeviceInfo.variantId;
-      _deviceParameters["machineId"] = linuxDeviceInfo.machineId;
-    } catch (exception) {
-      _logger.warning("Load Linux parameters failed: $exception");
-    }
-  }
-
-  void _loadMacOSParameters(MacOsDeviceInfo macOsDeviceInfo) {
-    try {
-      _deviceParameters["computerName"] = macOsDeviceInfo.computerName;
-      _deviceParameters["hostName"] = macOsDeviceInfo.hostName;
-      _deviceParameters["arch"] = macOsDeviceInfo.arch;
-      _deviceParameters["model"] = macOsDeviceInfo.model;
-      _deviceParameters["kernelVersion"] = macOsDeviceInfo.kernelVersion;
-      _deviceParameters["osRelease"] = macOsDeviceInfo.osRelease;
-      _deviceParameters["activeCPUs"] = macOsDeviceInfo.activeCPUs;
-      _deviceParameters["memorySize"] = macOsDeviceInfo.memorySize;
-      _deviceParameters["cpuFrequency"] = macOsDeviceInfo.cpuFrequency;
-    } catch (exception) {
-      _logger.warning("Load MacOS parameters failed: $exception");
-    }
-  }
-
-  void _loadWindowsParameters(WindowsDeviceInfo windowsDeviceInfo) {
-    try {
-      _deviceParameters["computerName"] = windowsDeviceInfo.computerName;
-      _deviceParameters["numberOfCores"] = windowsDeviceInfo.numberOfCores;
-      _deviceParameters["systemMemoryInMegabytes"] =
-          windowsDeviceInfo.systemMemoryInMegabytes;
-    } catch (exception) {
-      _logger.warning("Load Windows parameters failed: $exception");
-    }
-  }
-
-  void _loadWebParameters(WebBrowserInfo webBrowserInfo) async {
-    try {
-      _deviceParameters["language"] = webBrowserInfo.language;
-      _deviceParameters["appCodeName"] = webBrowserInfo.appCodeName;
-      _deviceParameters["appName"] = webBrowserInfo.appName;
-      _deviceParameters["appVersion"] = webBrowserInfo.appVersion;
-      _deviceParameters["browserName"] = webBrowserInfo.browserName.toString();
-      _deviceParameters["deviceMemory"] = webBrowserInfo.deviceMemory;
-      _deviceParameters["hardwareConcurrency"] =
-          webBrowserInfo.hardwareConcurrency;
-      _deviceParameters["languages"] = webBrowserInfo.languages;
-      _deviceParameters["maxTouchPoints"] = webBrowserInfo.maxTouchPoints;
-      _deviceParameters["platform"] = webBrowserInfo.platform;
-      _deviceParameters["product"] = webBrowserInfo.product;
-      _deviceParameters["productSub"] = webBrowserInfo.productSub;
-      _deviceParameters["userAgent"] = webBrowserInfo.userAgent;
-      _deviceParameters["vendor"] = webBrowserInfo.vendor;
-      _deviceParameters["vendorSub"] = webBrowserInfo.vendorSub;
-    } catch (exception) {
-      _logger.warning("Load Web parameters failed: $exception");
-    }
   }
 
   void _loadAndroidParameters(AndroidDeviceInfo androidDeviceInfo) {
@@ -480,7 +388,7 @@ class Catcher with ReportModeAction {
   void _setupScreenshotManager() {
     screenshotManager = CatcherScreenshotManager(_logger);
     final String screenshotsPath = _currentConfig.screenshotsPath;
-    if (!ApplicationProfileManager.isWeb() && screenshotsPath.isEmpty) {
+    if (screenshotsPath.isEmpty) {
       _logger.warning("Screenshots path is empty. Screenshots won't work.");
     }
     screenshotManager.path = screenshotsPath;
@@ -516,10 +424,7 @@ class Catcher with ReportModeAction {
 
     _cleanPastReportsOccurences();
 
-    File? screenshot;
-    if (!ApplicationProfileManager.isWeb()) {
-      screenshot = await screenshotManager.captureAndSave();
-    }
+    final screenshot = await screenshotManager.captureAndSave();
 
     final Report report = Report(
       error,
@@ -728,23 +633,11 @@ class Catcher with ReportModeAction {
 
   ///Get platform type based on device.
   PlatformType _getPlatformType() {
-    if (ApplicationProfileManager.isWeb()) {
-      return PlatformType.web;
-    }
     if (ApplicationProfileManager.isAndroid()) {
       return PlatformType.android;
     }
     if (ApplicationProfileManager.isIos()) {
       return PlatformType.iOS;
-    }
-    if (ApplicationProfileManager.isLinux()) {
-      return PlatformType.linux;
-    }
-    if (ApplicationProfileManager.isWindows()) {
-      return PlatformType.windows;
-    }
-    if (ApplicationProfileManager.isMacOS()) {
-      return PlatformType.macOS;
     }
 
     return PlatformType.unknown;

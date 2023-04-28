@@ -10,7 +10,7 @@ void main() async {
   if (Platform.isAndroid) {
     externalDir = await getExternalStorageDirectory();
   }
-  if (Platform.isIOS || Platform.isMacOS) {
+  if (Platform.isIOS) {
     externalDir = await getApplicationDocumentsDirectory();
   }
   String path = "";

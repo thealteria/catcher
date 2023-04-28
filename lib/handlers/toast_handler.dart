@@ -30,8 +30,7 @@ class ToastHandler extends ReportHandler {
   @override
   Future<bool> handle(Report error, BuildContext? buildContext) async {
     if (ApplicationProfileManager.isAndroid() ||
-        ApplicationProfileManager.isIos() ||
-        ApplicationProfileManager.isWeb()) {
+        ApplicationProfileManager.isIos()) {
       Fluttertoast.showToast(
         msg: _getErrorMessage(error),
         toastLength: _getLength(),
@@ -105,10 +104,6 @@ class ToastHandler extends ReportHandler {
   List<PlatformType> getSupportedPlatforms() => [
         PlatformType.android,
         PlatformType.iOS,
-        PlatformType.web,
-        PlatformType.linux,
-        PlatformType.macOS,
-        PlatformType.windows,
       ];
 
   @override

@@ -32,11 +32,9 @@ class DiscordHandler extends ReportHandler {
 
   @override
   Future<bool> handle(Report report, BuildContext? context) async {
-    if (report.platformType != PlatformType.web) {
-      if (!(await CatcherUtils.isInternetConnectionAvailable())) {
-        _printLog("No internet connection available");
-        return false;
-      }
+    if (!(await CatcherUtils.isInternetConnectionAvailable())) {
+      _printLog("No internet connection available");
+      return false;
     }
 
     String message = "";
@@ -144,11 +142,7 @@ class DiscordHandler extends ReportHandler {
 
   @override
   List<PlatformType> getSupportedPlatforms() => [
-        PlatformType.web,
         PlatformType.android,
         PlatformType.iOS,
-        PlatformType.linux,
-        PlatformType.macOS,
-        PlatformType.windows,
       ];
 }

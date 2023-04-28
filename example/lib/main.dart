@@ -6,7 +6,7 @@ void main() {
   ///Configure your debug options (settings used in development mode)
   CatcherOptions debugOptions = CatcherOptions(
     ///Show information about caught error in dialog
-    DialogReportMode(),
+    SilentReportMode(),
     [
       ///Send logs to HTTP server
       HttpHandler(HttpRequestType.post,
@@ -14,7 +14,7 @@ void main() {
           printLogs: true),
 
       ///Print logs in console
-      ConsoleHandler()
+      ConsoleHandler(),
     ],
   );
 
