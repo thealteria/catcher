@@ -12,7 +12,6 @@ import 'package:catcher/model/report.dart';
 import 'package:catcher/model/report_handler.dart';
 import 'package:catcher/model/report_mode.dart';
 import 'package:catcher/utils/catcher_error_widget.dart';
-import 'package:catcher/utils/catcher_logger.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -37,14 +36,10 @@ class Catcher with ReportModeAction {
   /// Instance of catcher config used in profile mode
   CatcherOptions? profileConfig;
 
-  /// Should catcher logs be enabled
-  final bool enableLogger;
-
   /// Should catcher run WidgetsFlutterBinding.ensureInitialized() during initialization.
   final bool ensureInitialized;
 
   late CatcherOptions _currentConfig;
-  late CatcherLogger _logger;
   late CatcherScreenshotManager screenshotManager;
   final Map<String, dynamic> _deviceParameters = <String, dynamic>{};
   final Map<String, dynamic> _applicationParameters = <String, dynamic>{};
@@ -64,7 +59,6 @@ class Catcher with ReportModeAction {
     this.releaseConfig,
     this.debugConfig,
     this.profileConfig,
-    this.enableLogger = true,
     this.ensureInitialized = false,
     GlobalKey<NavigatorState>? navigatorKey,
   }) : assert(
@@ -78,7 +72,6 @@ class Catcher with ReportModeAction {
     _instance = this;
     _configureNavigatorKey(navigatorKey);
     _setupCurrentConfig();
-    _configureLogger();
     _setupErrorHooks();
     _setupReportModeActionInReportMode();
     _setupScreenshotManager();
@@ -87,12 +80,12 @@ class Catcher with ReportModeAction {
     _loadApplicationInfo();
 
     if (_currentConfig.handlers.isEmpty) {
-      _logger.warning(
+      CatcherLogger.warning(
         "Handlers list is empty. Configure at least one handler to "
         "process error reports.",
       );
     } else {
-      _logger.fine("Catcher configured successfully.");
+      CatcherLogger.fine("Catcher configured successfully.");
     }
   }
 
@@ -154,7 +147,6 @@ class Catcher with ReportModeAction {
     _setupCurrentConfig();
     _setupReportModeActionInReportMode();
     _setupScreenshotManager();
-    _configureLogger();
     _localizationOptions = null;
   }
 
@@ -221,21 +213,6 @@ class Catcher with ReportModeAction {
     });
   }
 
-  void _configureLogger() {
-    if (_currentConfig.logger != null) {
-      _logger = _currentConfig.logger!;
-    } else {
-      _logger = CatcherLogger();
-    }
-    if (enableLogger) {
-      _logger.setup();
-    }
-
-    _currentConfig.handlers.forEach((handler) {
-      handler.logger = _logger;
-    });
-  }
-
   void _loadDeviceInfo() {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (ApplicationProfileManager.isAndroid()) {
@@ -249,7 +226,8 @@ class Catcher with ReportModeAction {
         _removeExcludedParameters();
       });
     } else {
-      _logger.info("Couldn't load device info for unsupported device type.");
+      CatcherLogger.error(
+          "Couldn't load device info for unsupported device type.");
     }
   }
 
@@ -290,7 +268,7 @@ class Catcher with ReportModeAction {
       _deviceParameters["versionSecurityPatch"] =
           androidDeviceInfo.version.securityPatch;
     } catch (exception) {
-      _logger.warning("Load Android parameters failed: $exception");
+      CatcherLogger.warning("Load Android parameters failed: $exception");
     }
   }
 
@@ -308,7 +286,7 @@ class Catcher with ReportModeAction {
       _deviceParameters["utsnameNodename"] = iosInfo.utsname.nodename;
       _deviceParameters["utsnameSysname"] = iosInfo.utsname.sysname;
     } catch (exception) {
-      _logger.warning("Load iOS parameters failed: $exception");
+      CatcherLogger.warning("Load iOS parameters failed: $exception");
     }
   }
 
@@ -386,10 +364,11 @@ class Catcher with ReportModeAction {
 
   ///Setup screenshot manager's screenshots path.
   void _setupScreenshotManager() {
-    screenshotManager = CatcherScreenshotManager(_logger);
+    screenshotManager = CatcherScreenshotManager();
     final String screenshotsPath = _currentConfig.screenshotsPath;
     if (screenshotsPath.isEmpty) {
-      _logger.warning("Screenshots path is empty. Screenshots won't work.");
+      CatcherLogger.warning(
+          "Screenshots path is empty. Screenshots won't work.");
     }
     screenshotManager.path = screenshotsPath;
   }
@@ -411,14 +390,14 @@ class Catcher with ReportModeAction {
   }) async {
     if (errorDetails?.silent == true &&
         _currentConfig.handleSilentError == false) {
-      _logger.info(
+      CatcherLogger.error(
         "Report error skipped for error: $error. HandleSilentError is false.",
       );
       return;
     }
 
     if (_localizationOptions == null) {
-      _logger.info("Setup localization lazily!");
+      CatcherLogger.fine("Setup localization lazily!");
       _setupLocalization();
     }
 
@@ -439,7 +418,7 @@ class Catcher with ReportModeAction {
     );
 
     if (_isReportInReportsOccurencesMap(report)) {
-      _logger.fine(
+      CatcherLogger.fine(
         "Error: '$error' has been skipped to due to duplication occurence within ${_currentConfig.reportOccurrenceTimeout} ms.",
       );
       return;
@@ -447,7 +426,7 @@ class Catcher with ReportModeAction {
 
     if (_currentConfig.filterFunction != null &&
         _currentConfig.filterFunction!(report) == false) {
-      _logger.fine(
+      CatcherLogger.fine(
         "Error: '$error' has been filtered from Catcher logs. Report will be skipped.",
       );
       return;
@@ -456,12 +435,12 @@ class Catcher with ReportModeAction {
     ReportMode? reportMode =
         _getReportModeFromExplicitExceptionReportModeMap(error);
     if (reportMode != null) {
-      _logger.info("Using explicit report mode for error");
+      CatcherLogger.error("Using explicit report mode for error");
     } else {
       reportMode = _currentConfig.reportMode;
     }
     if (!isReportModeSupportedInPlatform(report, reportMode)) {
-      _logger.warning(
+      CatcherLogger.warning(
         "$reportMode in not supported for ${describeEnum(report.platformType)} platform",
       );
       return;
@@ -473,7 +452,7 @@ class Catcher with ReportModeAction {
       if (_isContextValid()) {
         reportMode.requestAction(report, _getContext());
       } else {
-        _logger.warning(
+        CatcherLogger.warning(
           "Couldn't use report mode because you didn't provide navigator key. Add navigator key to use this report mode.",
         );
       }
@@ -522,7 +501,7 @@ class Catcher with ReportModeAction {
     final ReportHandler? reportHandler =
         _getReportHandlerFromExplicitExceptionHandlerMap(report.error);
     if (reportHandler != null) {
-      _logger.info("Using explicit report handler");
+      CatcherLogger.error("Using explicit report handler");
       _handleReport(report, reportHandler);
       return;
     }
@@ -534,14 +513,14 @@ class Catcher with ReportModeAction {
 
   void _handleReport(Report report, ReportHandler reportHandler) {
     if (!isReportHandlerSupportedInPlatform(report, reportHandler)) {
-      _logger.warning(
-        "$reportHandler in not supported for ${describeEnum(report.platformType)} platform",
+      CatcherLogger.warning(
+        "${reportHandler.reportHandlerName()} in not supported for ${describeEnum(report.platformType)} platform",
       );
       return;
     }
 
     if (reportHandler.isContextRequired() && !_isContextValid()) {
-      _logger.warning(
+      CatcherLogger.warning(
         "Couldn't use report handler because you didn't provide navigator key. Add navigator key to use this report mode.",
       );
       return;
@@ -550,21 +529,25 @@ class Catcher with ReportModeAction {
     reportHandler
         .handle(report, _getContext())
         .catchError((dynamic handlerError) {
-      _logger.warning(
+      CatcherLogger.warning(
         "Error occurred in ${reportHandler.toString()}: ${handlerError.toString()}",
       );
     }).then((result) {
-      _logger.info("${report.runtimeType} result: $result");
+      CatcherLogger.fine(
+        "${reportHandler.reportHandlerName()} result: $result",
+      );
       if (!result) {
-        _logger.warning("${reportHandler.toString()} failed to report error");
+        CatcherLogger.warning(
+          "${reportHandler.reportHandlerName()} failed to report error",
+        );
       } else {
         _cachedReports.remove(report);
       }
     }).timeout(
       Duration(milliseconds: _currentConfig.handlerTimeout),
       onTimeout: () {
-        _logger.warning(
-          "${reportHandler.toString()} failed to report error because of timeout",
+        CatcherLogger.warning(
+          "${reportHandler.reportHandlerName()} failed to report error because of timeout",
         );
       },
     );
