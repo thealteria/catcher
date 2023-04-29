@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
+import '../utils/catcher_logger.dart';
+
 class EmailAutoHandler extends BaseEmailHandler {
   final String smtpHost;
   final int smtpPort;
@@ -92,7 +94,7 @@ class EmailAutoHandler extends BaseEmailHandler {
 
   void _printLog(String log) {
     if (printLogs) {
-      logger.info(log);
+      CatcherLogger.error(log);
     }
   }
 

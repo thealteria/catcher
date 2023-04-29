@@ -5,7 +5,6 @@ import 'package:catcher/model/localization_options.dart';
 import 'package:catcher/model/report.dart';
 import 'package:catcher/model/report_handler.dart';
 import 'package:catcher/model/report_mode.dart';
-import 'package:catcher/utils/catcher_logger.dart';
 
 class CatcherOptions {
   /// Handlers that should be used
@@ -51,9 +50,6 @@ class CatcherOptions {
   ///milliseconds.
   final int reportOccurrenceTimeout;
 
-  ///Logger instance.
-  final CatcherLogger? logger;
-
   /// Builds catcher options instance
   CatcherOptions(
     this.reportMode,
@@ -68,7 +64,6 @@ class CatcherOptions {
     this.excludedParameters = const [],
     this.filterFunction,
     this.reportOccurrenceTimeout = 3000,
-    this.logger,
   });
 
   /// Builds default catcher options release instance
@@ -84,8 +79,7 @@ class CatcherOptions {
         screenshotsPath = "",
         excludedParameters = const [],
         filterFunction = null,
-        reportOccurrenceTimeout = 3000,
-        logger = CatcherLogger();
+        reportOccurrenceTimeout = 3000;
 
   /// Builds default catcher options debug instance
   CatcherOptions.getDefaultDebugOptions()
@@ -100,8 +94,7 @@ class CatcherOptions {
         screenshotsPath = "",
         excludedParameters = const [],
         filterFunction = null,
-        reportOccurrenceTimeout = 3000,
-        logger = CatcherLogger();
+        reportOccurrenceTimeout = 3000;
 
   /// Builds default catcher options profile instance
   CatcherOptions.getDefaultProfileOptions()
@@ -116,6 +109,5 @@ class CatcherOptions {
         screenshotsPath = "",
         excludedParameters = const [],
         filterFunction = null,
-        reportOccurrenceTimeout = 3000,
-        logger = CatcherLogger();
+        reportOccurrenceTimeout = 3000;
 }

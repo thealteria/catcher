@@ -14,7 +14,7 @@ void main() {
       action: SnackBarAction(
           label: "Button",
           onPressed: () {
-            print("Click!");
+            CatcherLogger.fine("Click!");
           }),
       textStyle: TextStyle(
         color: Colors.white,

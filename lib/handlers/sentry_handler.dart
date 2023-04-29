@@ -112,7 +112,7 @@ class SentryHandler extends ReportHandler {
 
   void _printLog(String message) {
     if (printLogs) {
-      logger.info(message);
+      CatcherLogger.error(message);
     }
   }
 

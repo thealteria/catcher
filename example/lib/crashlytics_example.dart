@@ -81,7 +81,7 @@ class CrashlyticsHandler extends ReportHandler {
 
   void _printLog(String log) {
     if (printLogs) {
-      _logger.info(log);
+      CatcherLogger.info(log);
     }
   }
 }

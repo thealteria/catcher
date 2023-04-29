@@ -18,7 +18,7 @@ void main() async {
   if (externalDir != null) {
     path = externalDir.path.toString() + "/log.txt";
   }
-  print("PATH: " + path);
+  CatcherLogger.fine("PATH: " + path);
 
   CatcherOptions debugOptions = CatcherOptions(
       DialogReportMode(), [FileHandler(File(path), printLogs: true)]);
@@ -73,9 +73,9 @@ class ChildWidget extends StatelessWidget {
 
   void checkPermissions() async {
     var status = await Permission.storage.status;
-    print("Status: $status");
+    CatcherLogger.fine("Status: $status");
     if (!status.isGranted) {
-      print("Requested");
+      CatcherLogger.fine("Requested");
     }
   }
 

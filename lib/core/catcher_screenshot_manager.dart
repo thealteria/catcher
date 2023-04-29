@@ -5,19 +5,19 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:catcher/utils/catcher_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
+import '../utils/catcher_logger.dart';
+
 ///Manager which takes screenshot of configured widget. Screenshot will be saved
 ///to file which can be reused later.
 class CatcherScreenshotManager {
-  final CatcherLogger _logger;
   late GlobalKey _containerKey;
   String? _path;
 
-  CatcherScreenshotManager(this._logger) {
+  CatcherScreenshotManager() {
     _containerKey = GlobalKey();
   }
 
@@ -43,7 +43,7 @@ class CatcherScreenshotManager {
         return saveFile(content);
       }
     } catch (exception) {
-      _logger.warning("Failed to create screenshot file: $exception");
+      CatcherLogger.warning("Failed to create screenshot file: $exception");
     }
     return null;
   }

@@ -100,7 +100,7 @@ class HttpHandler extends ReportHandler {
 
   void _printLog(String log) {
     if (printLogs) {
-      logger.info(log);
+      CatcherLogger.error(log);
     }
   }
 

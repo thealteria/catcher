@@ -1,39 +1,54 @@
-import 'package:logging/logging.dart';
+import 'dart:developer';
 
-///Class used to provide logger for Catcher.
+import 'package:flutter/foundation.dart';
+
+enum LogLevel {
+  fine(800, '32'), //green
+  warning(900, '38;5;216'), //orange
+  error(1000, '31'); //red
+
+  const LogLevel(this.level, this.ansiCode);
+  final int level;
+  final String ansiCode;
+}
+
+///Class used to provide logger for Catcher. Only print logs in [kDebugMode]
 class CatcherLogger {
-  final Logger _logger = Logger("Catcher");
+  const CatcherLogger._();
 
-  ///Setup logger configuration.
-  void setup() {
-    Logger.root.level = Level.ALL;
-    Logger.root.onRecord.listen(
-      (LogRecord rec) {
-        // ignore: avoid_print
-        print(
-          '[${rec.time} | ${rec.loggerName} | ${rec.level.name}] ${rec.message}',
+  static void _log(
+    LogLevel level,
+    String message,
+  ) {
+    if (kDebugMode) {
+      if (level == LogLevel.error) {
+        log(
+          '',
+          level: 1000,
+          name: 'Catcher',
+          error: '[${DateTime.now()} | ${level.name.toUpperCase()}] $message',
         );
-      },
-    );
+      } else {
+        debugPrint(
+          '\x1b[${level.ansiCode}m[${DateTime.now()} | Catcher | '
+          '${level.name.toUpperCase()}] $message\x1b[0m',
+        );
+      }
+    }
   }
 
-  ///Log info message.
-  void info(String message) {
-    _logger.info(message);
+  ///Log error message.
+  static void error(String message) {
+    _log(LogLevel.error, message);
   }
 
   ///Log fine message.
-  void fine(String message) {
-    _logger.fine(message);
+  static void fine(String message) {
+    _log(LogLevel.fine, message);
   }
 
   ///Log warning message.
-  void warning(String message) {
-    _logger.warning(message);
-  }
-
-  ///Log severe mesasge.
-  void severe(String message) {
-    _logger.severe(message);
+  static void warning(String message) {
+    _log(LogLevel.warning, message);
   }
 }

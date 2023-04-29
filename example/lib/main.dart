@@ -2,6 +2,8 @@ import 'package:catcher/catcher.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry/sentry.dart';
 
+final navigationKey = GlobalKey<NavigatorState>();
+
 void main() {
   ///Configure your debug options (settings used in development mode)
   CatcherOptions debugOptions = CatcherOptions(
@@ -43,6 +45,7 @@ void main() {
     },
     debugConfig: debugOptions,
     releaseConfig: releaseOptions,
+    navigatorKey: navigationKey,
   );
 }
 
@@ -62,7 +65,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       ///Last step: add navigator key of Catcher here, so Catcher can show
       ///page and dialog!
-      navigatorKey: Catcher.navigatorKey,
+      navigatorKey: navigationKey,
       home: Scaffold(
         appBar: AppBar(
           title: const Text("Catcher example"),

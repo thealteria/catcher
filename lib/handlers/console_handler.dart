@@ -20,62 +20,65 @@ class ConsoleHandler extends ReportHandler {
 
   @override
   Future<bool> handle(Report report, BuildContext? context) {
-    logger.info(
+    CatcherLogger.error(
       "============================== CATCHER LOG ==============================",
     );
-    logger.info("Crash occurred on ${report.dateTime}");
-    logger.info("");
+    CatcherLogger.error("Crash occurred on ${report.dateTime}");
+    CatcherLogger.error("");
     if (enableDeviceParameters) {
       _printDeviceParametersFormatted(report.deviceParameters);
-      logger.info("");
+      CatcherLogger.error("");
     }
     if (enableApplicationParameters) {
       _printApplicationParametersFormatted(report.applicationParameters);
-      logger.info("");
+      CatcherLogger.error("");
     }
-    logger.info("---------- ERROR ----------");
-    logger.info("${report.error}");
-    logger.info("");
+    CatcherLogger.error("---------- ERROR ----------");
+    CatcherLogger.error("${report.error}");
+    CatcherLogger.error("");
     if (enableStackTrace) {
       _printStackTraceFormatted(report.stackTrace as StackTrace?);
     }
     if (enableCustomParameters) {
       _printCustomParametersFormatted(report.customParameters);
     }
-    logger.info(
+    CatcherLogger.error(
       "======================================================================",
     );
     return Future.value(true);
   }
 
   void _printDeviceParametersFormatted(Map<String, dynamic> deviceParameters) {
-    logger.info("------- DEVICE INFO -------");
-    for (final entry in deviceParameters.entries) {
-      logger.info("${entry.key}: ${entry.value}");
-    }
+    _printLog('DEVICE INFO', deviceParameters.entries);
   }
 
   void _printApplicationParametersFormatted(
     Map<String, dynamic> applicationParameters,
   ) {
-    logger.info("------- APP INFO -------");
-    for (final entry in applicationParameters.entries) {
-      logger.info("${entry.key}: ${entry.value}");
-    }
+    _printLog('APP INFO', applicationParameters.entries);
   }
 
   void _printCustomParametersFormatted(Map<String, dynamic> customParameters) {
-    logger.info("------- CUSTOM INFO -------");
-    for (final entry in customParameters.entries) {
-      logger.info("${entry.key}: ${entry.value}");
-    }
+    _printLog('CUSTOM INFO', customParameters.entries);
   }
 
   void _printStackTraceFormatted(StackTrace? stackTrace) {
-    logger.info("------- STACK TRACE -------");
-    for (final entry in stackTrace.toString().split("\n")) {
-      logger.info(entry);
+    _printLog('STACK TRACE', stackTrace.toString().split('\n'));
+  }
+
+  void _printLog(String title, Object entries) {
+    String message = '------- $title -------\n';
+
+    if (entries is Iterable<MapEntry<String, dynamic>>) {
+      for (final entry in entries) {
+        message += '${entry.key}: ${entry.value}\n';
+      }
+    } else if (entries is List<String>) {
+      for (final entry in entries) {
+        message += '$entry\n';
+      }
     }
+    CatcherLogger.error(message);
   }
 
   @override
