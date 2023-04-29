@@ -54,11 +54,9 @@ import 'package:catcher/catcher.dart';
 * [Email Auto Handler](#email-auto-handler)  
 * [Http Handler](#http-handler)  
 * [File Handler](#file-handler)  
-* [Toast Handler](#toast-handler)
 * [Sentry Handler](#sentry-handler)
 * [Slack Handler](#slack-handler)
 * [Discord Handler](#discord-handler)
-* [Snackbar Handler](#snackbar-handler)
 * [Crashlytics Handler](#crashlytics-handler)
 
 [Test Exception](#test-exception)  
@@ -264,7 +262,7 @@ main() {
     EmailManualHandler(["recipient@email.com"])
   ]);
   CatcherOptions profileOptions = CatcherOptions(
-    NotificationReportMode(), [ConsoleHandler(), ToastHandler()],
+    NotificationReportMode(), [ConsoleHandler()],
     handlerTimeout: 10000, customParameters: {"example"c: "example_parameter"},);
   Catcher(rootWidget: MyApp(), debugConfig: debugOptions, releaseConfig: releaseOptions, profileConfig: profileOptions, enableLogger: false, navigatorKey: navigatorKey);
 }
@@ -337,8 +335,6 @@ You can add translate for given parameters:
 * pageReportModeDescription - page report mode description
 * pageReportModeAccept - page report mode accept button
 * pageReportModeCancel - page report mode cancel button
-* toastHandlerDescription - toast handler message
-
 
 If you want to override default english texts, just add simply localization options for "en" language.
 
@@ -418,7 +414,6 @@ main() {
             "Wystąpił niespodziewany błąd aplikacji. Raport z błędem jest gotowy do wysłania do zespołu wsparcia. Naciśnij akceptuj aby wysłać raport lub odrzuć aby odrzucić raport.",
         pageReportModeAccept: "Akceptuj",
         pageReportModeCancel: "Odrzuć",
-        toastHandlerDescription: "Wystąpił błąd:",
     ) 
   ]);
   CatcherOptions releaseOptions = CatcherOptions(NotificationReportMode(), [
@@ -726,22 +721,6 @@ This is required because WidgetBindings ensureInitialized must be called first b
 path_provider methods.
 See example here: https://github.com/jhomlala/catcher/blob/master/example/lib/file_example.dart
 
-#### Toast Handler
-Toast handler allows to show short message in toast. Minimal example:
-
-All parameters list:
-* gravity (optional) - location of the toast on screen top/middle/bottom
-* length (optional) - length of toast: long or short
-* backgroundColor (optional) - background color of toast
-* textColor (optional) - text color of toast
-* fontSize (optional) - text size
-* customMessage (optional) - custom message for toast, if not set then "Error occured: error" will be displayed.
-* handleWhenRejected - please look in console handler description
-
-<p align="center">
-<img src="https://raw.githubusercontent.com/jhomlala/catcher/master/screenshots/5.png" width="250px">
-</p>
-
 #### Sentry Handler
 Sentry handler allows to send handled errors to Sentry.io. Before using sentry handler, you need to create your project in
 Sentry.io page and then copy DSN link. Example:
@@ -834,29 +813,29 @@ All parameters list:
 * customMessageBuilder - provide custom message
 
 
-### Snackbar Handler
-Snackbar handler allows to show customized snackbar message.
+### Crashlytics Handler
+Crashlytics handler allows to send report to the Firebase Crashlytics.
 
 ```dart
 void main() {
   CatcherOptions debugOptions = CatcherOptions(DialogReportMode(), [
-    SnackbarHandler(
-      Duration(seconds: 5),
-      backgroundColor: Colors.green,
-      elevation: 2,
-      margin: EdgeInsets.all(16),
-      padding: EdgeInsets.all(16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      behavior: SnackBarBehavior.floating,
-      action: SnackBarAction(
-          label: "Button",
-          onPressed: () {
-            print("Click!");
-          }),
-      textStyle: TextStyle(
-        color: Colors.white,
-        fontSize: 16,
-      ),
+    CrashlyticsHandler(
+      crashlyticsReport: (String reportMessage, Report report) async {
+        await Future<void>.delayed(Duration(seconds: 5));
+        final crashlytics = FirebaseCrashlytics.instance;
+        crashlytics.setCrashlyticsCollectionEnabled(true);
+        crashlytics.log(reportMessage);
+        if (report.errorDetails != null) {
+          await crashlytics.recordFlutterError(
+            report.errorDetails as FlutterErrorDetails,
+          );
+        } else {
+          await crashlytics.recordError(
+            report.error,
+            report.stackTrace as StackTrace,
+          );
+        }
+      },
     ),
   ]);
 
@@ -870,24 +849,7 @@ void main() {
 ```
 
 All parameters list:
-* duration - See [SnackBar] in Flutter docs for details.
-* backgroundColor - See [SnackBar] in Flutter docs for details.
-* elevation - See [SnackBar] in Flutter docs for details.
-* margin - See [SnackBar] in Flutter docs for details.
-* padding - See [SnackBar] in Flutter docs for details.
-* width - See [SnackBar] in Flutter docs for details.
-* shape - See [SnackBar] in Flutter docs for details.
-* behavior - See [SnackBar] in Flutter docs for details.
-* action - See [SnackBar] in Flutter docs for details.
-* animation - See [SnackBar] in Flutter docs for details.
-* onVisible - See [SnackBar] in Flutter docs for details.
-* customMessage - Custom message which can be displayed instead default one.
-* textStyle - Custom text style for text displayed within snackbar.
-* printLogs - Enable additional logs printing
-
-
-#### Crashlytics Handler
-Crashlytics handler has been removed from core package. You can re-enable it in your project by using custom report mode presented in crashlytics_example in example project.
+* crashlyticsReport - to get report and report message to send it to firebase crashlytics.
 
 
 ### Explicit exception report handler map
@@ -1019,12 +981,12 @@ Also you need to provide directory path, where Catcher will store screenshot fil
   CatcherOptions debugOptions = CatcherOptions(
     DialogReportMode(),
     [
-      ToastHandler(),
+      ConsoleHandler(),
     ],
     screenshotsPath: path,
   );
 ```
-Screenshots will work for all platforms, except Web. Screenshots will work in:
+Screenshots will work in:
 * Http Handler
 * Email auto handler
 * Email manual handler
