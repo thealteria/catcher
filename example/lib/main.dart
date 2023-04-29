@@ -17,6 +17,26 @@ void main() {
 
       ///Print logs in console
       ConsoleHandler(),
+      CrashlyticsHandler(
+        crashlyticsReport: (String reportMessage, Report report) async {
+          await Future<void>.delayed(Duration(seconds: 5));
+
+          //add crashylitics like this to send data
+          // final crashlytics = FirebaseCrashlytics.instance;
+          // crashlytics.setCrashlyticsCollectionEnabled(true);
+          // crashlytics.log(reportMessage);
+          // if (report.errorDetails != null) {
+          //   await crashlytics.recordFlutterError(
+          //     report.errorDetails as FlutterErrorDetails,
+          //   );
+          // } else {
+          //   await crashlytics.recordError(
+          //     report.error,
+          //     report.stackTrace as StackTrace,
+          //   );
+          // }
+        },
+      ),
     ],
   );
 

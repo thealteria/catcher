@@ -10,12 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluttertoast: ^8.0.8
+  
   device_info_plus: ^8.2.2
-  package_info_plus: ^3.0.0
-  mailer: ^6.0.1
   dio: ^5.1.1
   flutter_mailer: ^2.0.0
+  fluttertoast: ^8.0.8
+  package_info_plus: ^3.0.0
+  mailer: ^6.0.1
   sentry: ^7.5.0
   universal_io: ^2.0.4
 
