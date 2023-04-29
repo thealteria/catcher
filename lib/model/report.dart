@@ -29,7 +29,7 @@ class Report {
   final PlatformType platformType;
 
   ///Screenshot of screen where error happens. Screenshot won't work everywhere
-  /// (i.e. web platform), so this may be null.
+  ///, so this may be null.
   final File? screenshot;
 
   /// Creates report instance
@@ -69,6 +69,14 @@ class Report {
     }
     if (enableCustomParameters) {
       json["customParameters"] = customParameters;
+    }
+    if (errorDetails != null && errorDetails?.toString().isNotEmpty == true) {
+      json["errorDetails"] = errorDetails.toString();
+    }
+    if (screenshot != null &&
+        screenshot?.path != null &&
+        screenshot?.path.isNotEmpty == true) {
+      json["screenshot"] = screenshot!.path.toString();
     }
     return json;
   }
