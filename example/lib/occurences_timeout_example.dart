@@ -6,7 +6,6 @@ void main() {
       SilentReportMode(),
       [
         ConsoleHandler(),
-        ToastHandler(),
       ],
       reportOccurrenceTimeout: 30000);
   CatcherOptions releaseOptions = CatcherOptions(PageReportMode(), [

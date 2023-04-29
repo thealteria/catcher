@@ -13,9 +13,6 @@ class LocalizationOptions {
   final String pageReportModeAccept;
   final String pageReportModeCancel;
 
-  final String toastHandlerDescription;
-  final String snackbarHandlerDescription;
-
   LocalizationOptions(
     this.languageCode, {
     this.notificationReportModeTitle = "Application error occurred",
@@ -31,8 +28,6 @@ class LocalizationOptions {
         "Unexpected error occurred in application. Error report is ready to send to support team. Please click Accept to send error report or Cancel to dismiss report.",
     this.pageReportModeAccept = "Accept",
     this.pageReportModeCancel = "Cancel",
-    this.toastHandlerDescription = "Error occurred:",
-    this.snackbarHandlerDescription = "Error occurred:",
   });
 
   static LocalizationOptions buildDefaultEnglishOptions() {
@@ -54,8 +49,6 @@ class LocalizationOptions {
           "应用程序中发生意外错误。 错误报告已准备好发送给支持团队。 请单击“接受”以发送错误报告，或单击“取消”以关闭报告。",
       pageReportModeAccept: "接受",
       pageReportModeCancel: "取消",
-      toastHandlerDescription: "发生了错误:",
-      snackbarHandlerDescription: "发生了错误:",
     );
   }
 
@@ -75,8 +68,6 @@ class LocalizationOptions {
           "आवेदन में अप्रत्याशित त्रुटि हुई। त्रुटि रिपोर्ट समर्थन टीम को भेजने के लिए तैयार है। कृपया त्रुटि रिपोर्ट भेजने के लिए स्वीकार करें या रिपोर्ट को रद्द करने के लिए रद्द करें पर क्लिक करें।",
       pageReportModeAccept: "स्वीकार करना",
       pageReportModeCancel: "रद्द करना",
-      toastHandlerDescription: "त्रुटि हुई:",
-      snackbarHandlerDescription: "त्रुटि हुई:",
     );
   }
 
@@ -96,8 +87,6 @@ class LocalizationOptions {
           "Se ha producido un error inesperado en la aplicación. El informe de errores está listo para enviar al equipo de soporte. Haga clic en Aceptar para enviar el informe de errores o en Cancelar para cancelar el informe.",
       pageReportModeAccept: "Aceptar",
       pageReportModeCancel: "Cancelar",
-      toastHandlerDescription: "Se produjo un error:",
-      snackbarHandlerDescription: "Se produjo un error:",
     );
   }
 
@@ -117,8 +106,6 @@ class LocalizationOptions {
           "Ralat tidak dijangka berlaku dalam aplikasi. Laporan ralat sedia dihantar untuk menyokong pasukan. Sila klik Terima untuk menghantar laporan ralat atau Batal untuk menolak laporan.",
       pageReportModeAccept: "Terima",
       pageReportModeCancel: "Batalkan",
-      toastHandlerDescription: "Ralat berlaku:",
-      snackbarHandlerDescription: "Ralat berlaku:",
     );
   }
 
@@ -138,8 +125,6 @@ class LocalizationOptions {
           "В приложении произошла непредвиденная ошибка. Отчет об ошибке готов к отправке в службу поддержки. Пожалуйста, нажмите Принять, чтобы отправить отчет об ошибке или Отмена, чтобы закрыть отчет.",
       pageReportModeAccept: "принимать",
       pageReportModeCancel: "отменить",
-      toastHandlerDescription: "Произошла ошибка:",
-      snackbarHandlerDescription: "Произошла ошибка:",
     );
   }
 
@@ -159,8 +144,6 @@ class LocalizationOptions {
           "Ocorreu um erro inesperado no aplicativo. O relatório de erros está pronto para ser enviado à equipe de suporte. Por favor, clique em Aceitar para enviar o relatório de erros ou em Cancelar para descartar o relatório.",
       pageReportModeAccept: "Aceitar",
       pageReportModeCancel: "Cancelar",
-      toastHandlerDescription: "Ocorreu um erro:",
-      snackbarHandlerDescription: "Ocorreu um erro:",
     );
   }
 
@@ -180,8 +163,6 @@ class LocalizationOptions {
           "Une erreur inattendue s'est produite dans l'application. Le rapport d'erreur est prêt à être envoyé à l'équipe de support. Cliquez sur Accepter pour envoyer le rapport d'erreur ou sur Annuler pour rejeter le rapport.",
       pageReportModeAccept: "Acceptez",
       pageReportModeCancel: "Annuler",
-      toastHandlerDescription: "Erreur est survenue:",
-      snackbarHandlerDescription: "Erreur est survenue:",
     );
   }
 
@@ -201,8 +182,6 @@ class LocalizationOptions {
           "Wystąpił niespodziewany błąd aplikacji. Raport z błędem jest gotowy do wysłania do zespołu wsparcia. Naciśnij akceptuj aby wysłać raport lub odrzuć aby odrzucić raport.",
       pageReportModeAccept: "Akceptuj",
       pageReportModeCancel: "Odrzuć",
-      toastHandlerDescription: "Wystąpił błąd:",
-      snackbarHandlerDescription: "Wystąpił błąd:",
     );
   }
 
@@ -222,8 +201,6 @@ class LocalizationOptions {
           "Si è verificato un errore imprevisto durante l'esecuzione. Il report è pronto per essere inviato al team di supporto. Clicca Accetta per inviare il report or Annulla per rifiutare.",
       pageReportModeAccept: "Accetta",
       pageReportModeCancel: "Annulla",
-      toastHandlerDescription: "Errore:",
-      snackbarHandlerDescription: "Errore:",
     );
   }
 
@@ -242,8 +219,6 @@ class LocalizationOptions {
           "어플리케이션에서 예기치 않은 오류가 발생했습니다. 지원팀에 오류를 보고할 준비가 되어 있으니 수락을 클릭하여 오류 보고서를 전송하시거나 취소를 클릭하여 보고서를 닫으세요.",
       pageReportModeAccept: "수락",
       pageReportModeCancel: "취소",
-      toastHandlerDescription: "오류가 발생했습니다:",
-      snackbarHandlerDescription: "오류가 발생했습니다:",
     );
   }
 
@@ -263,8 +238,6 @@ class LocalizationOptions {
           "Er is een onverwachte fout opgetreden in de applicatie. Het foutrapport is klaar om naar het ondersteuningsteam te worden verstuurd. Druk op accepteer om het rapport te versturen of op annuleer om het rapport te verwijderen.",
       pageReportModeAccept: "Accepteer",
       pageReportModeCancel: "Annuleer",
-      toastHandlerDescription: "Der er sket en fejl:",
-      snackbarHandlerDescription: "Der er sket en fejl:",
     );
   }
 
@@ -284,8 +257,6 @@ class LocalizationOptions {
           "Unerwarteter Fehler in der Anwendung aufgetreten. Der Fehlerbericht ist bereit zum Senden an das Support-Team. Bitte klicken Sie auf Akzeptieren, um den Fehlerbericht zu senden, oder auf Abbrechen, um den Bericht zu verwerfen.",
       pageReportModeAccept: "Akzeptieren",
       pageReportModeCancel: "Abbrechen",
-      toastHandlerDescription: "Es ist ein Fehler aufgetreten:",
-      snackbarHandlerDescription: "Es ist ein Fehler aufgetreten:",
     );
   }
 
@@ -303,8 +274,6 @@ class LocalizationOptions {
     String? pageReportModeDescription,
     String? pageReportModeAccept,
     String? pageReportModeCancel,
-    String? toastHandlerDescription,
-    String? snackbarHandlerDescription,
   }) {
     return LocalizationOptions(
       languageCode ?? this.languageCode,
@@ -325,10 +294,6 @@ class LocalizationOptions {
           pageReportModeDescription ?? this.pageReportModeDescription,
       pageReportModeAccept: pageReportModeAccept ?? this.pageReportModeAccept,
       pageReportModeCancel: pageReportModeCancel ?? this.pageReportModeCancel,
-      toastHandlerDescription:
-          toastHandlerDescription ?? this.toastHandlerDescription,
-      snackbarHandlerDescription:
-          snackbarHandlerDescription ?? this.snackbarHandlerDescription,
     );
   }
 }
