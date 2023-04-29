@@ -1,3 +1,11 @@
+## 0.7.1
+* [BREAKING_CHANGE] Removed web, macos and linux support.
+* [BREAKING_CHANGE] Removed ToastHandler and SnackbarHandler.
+* [BREAKING_CHANGE] Changed CatcherLogger: removed logging, added custom logs.
+* Upgraded dependencies
+* Added CrashlyticsHandler
+* removed plugin functionality
+
 ## 0.7.0
 * [BREAKING_CHANGE] Update to Flutter 3 by Nico Mexis (https://github.com/ThexXTURBOXx).
 * [BREAKING_CHANGE] Update device_info_plus and added android_id plugin by Nico Mexis (https://github.com/ThexXTURBOXx).
