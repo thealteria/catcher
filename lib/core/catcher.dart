@@ -333,30 +333,8 @@ class Catcher with ReportModeAction {
     switch (language.toLowerCase()) {
       case "en":
         return LocalizationOptions.buildDefaultEnglishOptions();
-      case "zh":
-        return LocalizationOptions.buildDefaultChineseOptions();
       case "hi":
         return LocalizationOptions.buildDefaultHindiOptions();
-      case "es":
-        return LocalizationOptions.buildDefaultSpanishOptions();
-      case "ms":
-        return LocalizationOptions.buildDefaultMalayOptions();
-      case "ru":
-        return LocalizationOptions.buildDefaultRussianOptions();
-      case "pt":
-        return LocalizationOptions.buildDefaultPortugueseOptions();
-      case "fr":
-        return LocalizationOptions.buildDefaultFrenchOptions();
-      case "pl":
-        return LocalizationOptions.buildDefaultPolishOptions();
-      case "it":
-        return LocalizationOptions.buildDefaultItalianOptions();
-      case "ko":
-        return LocalizationOptions.buildDefaultKoreanOptions();
-      case "nl":
-        return LocalizationOptions.buildDefaultDutchOptions();
-      case "de":
-        return LocalizationOptions.buildDefaultGermanOptions();
       default:
         return LocalizationOptions.buildDefaultEnglishOptions();
     }
