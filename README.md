@@ -626,37 +626,6 @@ Email Manual Handler parameters:
 * emailHeader (optional) - set additional email text header
 * printLogs (optional) - enable/disable debug logs
 
-#### Email Auto Handler
-Email handler can be used to send automatically email with error reports. Email handler has multiple configuration parameters. Few of them are required, other are optional. These parameters are required:
-
-```dart
- EmailAutoHandler("smtp.gmail.com", 587, "somefakeemail@gmail.com", "Catcher",
-          "FakePassword", ["myemail@gmail.com"])
-```
-We need to setup email smtp server, email account and recipient. Currently, only Gmail was tested and worked. You can try use other email providers, but there can be errors.  
-
-List of all parameters: 
- 
-* smtpHost (required) - host address of your email, for example host for gmail is smtp.gmail.com  
-* smtpPort (required) - smtp port of your email, for example port for gmail is 587  
-* senderEmail (required) - email from which Catcher will send email (it will be sender of error emails)  
-* senderName (required) - name of sender email
-* senderPassword (required) - password for sender email 
-* recipients (required) - list which contains recipient emails   
-* enableSSL (optional) - if your email provider supports SSL, you can enable this option
-* enableDeviceParameters (optional) - please look in console handler description
-* enableApplicationParameters (optional) - please look in console handler description
-* enableStackTrace (optional) - please look in console handler description
-* enableCustomParameters (optional) - please look in console handler description
-* emailTitle (optional) - custom title of report email, if not set then title will be: `Handled Error: >> [Error name] <<`
-* emailHeader (optional)-  custom header message before report data
-* sendHtml (optional) - enable/disable html data in your email, if enabled then html will be sent and your report will look much better
-* printLog (optional) - enable/disable debug logs
-
-Example email:
-<p align="center">
-<img src="https://raw.githubusercontent.com/jhomlala/catcher/master/screenshots/3.png">
-</p>
 
 #### Http Handler
 
