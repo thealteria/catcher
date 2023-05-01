@@ -690,31 +690,6 @@ This is required because WidgetBindings ensureInitialized must be called first b
 path_provider methods.
 See example here: https://github.com/jhomlala/catcher/blob/master/example/lib/file_example.dart
 
-#### Sentry Handler
-Sentry handler allows to send handled errors to Sentry.io. Before using sentry handler, you need to create your project in
-Sentry.io page and then copy DSN link. Example:
-
-```dart
-main() {
-
-  CatcherOptions debugOptions = CatcherOptions(
-      DialogReportMode(), [SentryHandler(SentryClient("YOUR_DSN_HERE"))]);
-  CatcherOptions releaseOptions = CatcherOptions(NotificationReportMode(), [
-    EmailManualHandler(["recipient@email.com"])
-  ]);
-
-  Catcher(rootWidget: MyApp(), debugConfig: debugOptions, releaseConfig: releaseOptions);
-}
-```
-
-All parameters list:
-* sentryClient - sentry client instance
-* enableDeviceParameters (optional) - please look in console handler description
-* enableApplicationParameters (optional) - please look in console handler description
-* enableCustomParameters (optional) - please look in console handler description
-* customEnvironment (optional) - custom environment string, if null, Catcher will generate it
-* customRelease (optional) - custom release string , if null, Catcher will generate it
-* printLogs (optional) - enable/disable debug logs
 
 #### Slack Handler
 Slack Handler allows to send messages to your Slack workspace. You can specify destination

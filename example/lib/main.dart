@@ -1,6 +1,5 @@
 import 'package:catcher/catcher.dart';
 import 'package:flutter/material.dart';
-import 'package:sentry/sentry.dart';
 
 final navigationKey = GlobalKey<NavigatorState>();
 
@@ -17,6 +16,15 @@ void main() {
 
       ///Print logs in console
       ConsoleHandler(),
+    ],
+  );
+
+  ///Configure your production options (settings used in release mode)
+  CatcherOptions releaseOptions = CatcherOptions(
+    ///Show new page with information about caught error
+    PageReportMode(),
+    [
+      ///Send logs to Crashlytics
       CrashlyticsHandler(
         crashlyticsReport: (String reportMessage, Report report) async {
           await Future<void>.delayed(Duration(seconds: 5));
@@ -36,20 +44,6 @@ void main() {
           //   );
           // }
         },
-      ),
-    ],
-  );
-
-  ///Configure your production options (settings used in release mode)
-  CatcherOptions releaseOptions = CatcherOptions(
-    ///Show new page with information about caught error
-    PageReportMode(),
-    [
-      ///Send logs to Sentry
-      SentryHandler(
-        SentryClient(
-          SentryOptions(dsn: "<DSN>"),
-        ),
       ),
 
       ///Print logs in console

@@ -8,7 +8,6 @@ export "package:catcher/handlers/discord_handler.dart";
 export "package:catcher/handlers/email_manual_handler.dart";
 export "package:catcher/handlers/file_handler.dart";
 export "package:catcher/handlers/http_handler.dart";
-export "package:catcher/handlers/sentry_handler.dart";
 export "package:catcher/handlers/slack_handler.dart";
 export 'package:catcher/mode/dialog_report_mode.dart';
 export 'package:catcher/mode/page_report_mode.dart';
