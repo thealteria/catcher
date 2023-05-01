@@ -15,23 +15,11 @@ void main() {
       dialogReportModeAccept: "YES",
       dialogReportModeCancel: "NO",
     ),
-    LocalizationOptions("pl",
-        notificationReportModeTitle: "Wystąpił błąd aplikacji",
-        notificationReportModeContent:
-            "Naciśnij tutaj aby wysłać raport do zespołu wpsarcia",
-        dialogReportModeTitle: "Błąd aplikacji",
-        dialogReportModeDescription:
-            "Wystąpił niespodziewany błąd aplikacji. Raport z błędem jest gotowy do wysłania do zespołu wsparcia. Naciśnij akceptuj aby wysłać raport lub odrzuć aby odrzucić raport.",
-        dialogReportModeAccept: "Akceptuj",
-        dialogReportModeCancel: "Odrzuć",
-        pageReportModeTitle: "Błąd aplikacji",
-        pageReportModeDescription:
-            "Wystąpił niespodziewany błąd aplikacji. Raport z błędem jest gotowy do wysłania do zespołu wsparcia. Naciśnij akceptuj aby wysłać raport lub odrzuć aby odrzucić raport.",
-        pageReportModeAccept: "Akceptuj",
-        pageReportModeCancel: "Odrzuć")
   ]);
   CatcherOptions releaseOptions = CatcherOptions(PageReportMode(), [
-    EmailManualHandler(["recipient@email.com"])
+    HttpHandler(HttpRequestType.post,
+        Uri.parse("https://jsonplaceholder.typicode.com/posts"),
+        printLogs: true),
   ]);
 
   Catcher(
@@ -61,7 +49,6 @@ class _MyAppState extends State<MyApp> {
       ],
       supportedLocales: [
         const Locale('en', 'US'),
-        const Locale('pl', 'PL'),
       ],
       home: Scaffold(
           appBar: AppBar(

@@ -93,7 +93,9 @@ main() {
     ConsoleHandler()
   ]);
   CatcherOptions releaseOptions = CatcherOptions(PageReportMode(), [
-    EmailManualHandler(["recipient@email.com"])
+    HttpHandler(HttpRequestType.post,
+          Uri.parse("https://jsonplaceholder.typicode.com/posts"),
+          printLogs: true),
   ]);
 
   Catcher(MyApp(), debugConfig: debugOptions, releaseConfig: releaseOptions);

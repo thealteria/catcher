@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() {
-  CatcherOptions debugOptions = CatcherOptions(NotificationReportMode(), [
-    EmailManualHandler(["recipient@email.com"]),
-    ConsoleHandler()
-  ]);
+  CatcherOptions debugOptions =
+      CatcherOptions(NotificationReportMode(), [ConsoleHandler()]);
   CatcherOptions releaseOptions = CatcherOptions(PageReportMode(), [
-    EmailManualHandler(["recipient@email.com"])
+    HttpHandler(HttpRequestType.post,
+        Uri.parse("https://jsonplaceholder.typicode.com/posts"),
+        printLogs: true),
   ]);
 
   Catcher(

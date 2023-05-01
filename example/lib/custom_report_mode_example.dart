@@ -3,12 +3,12 @@ import 'package:catcher/model/platform_type.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  CatcherOptions debugOptions = CatcherOptions(CustomPageReportMode(), [
-    EmailManualHandler(["recipient@email.com"]),
-    ConsoleHandler()
-  ]);
+  CatcherOptions debugOptions =
+      CatcherOptions(CustomPageReportMode(), [ConsoleHandler()]);
   CatcherOptions releaseOptions = CatcherOptions(PageReportMode(), [
-    EmailManualHandler(["recipient@email.com"])
+    HttpHandler(HttpRequestType.post,
+        Uri.parse("https://jsonplaceholder.typicode.com/posts"),
+        printLogs: true),
   ]);
 
   Catcher(

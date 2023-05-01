@@ -12,12 +12,9 @@ Check table below to see which features are enabled in Platforms:
 |  Application data in report |    ✔    |  ✔  |  ❌  |   ❌   |    ❌    |   ❌   |
 |       Console handler       |    ✔    |  ✔  |  ✔  |   ✔   |    ✔    |   ✔   |
 |       Discord handler       |    ✔    |  ✔  |  ✔  |   ✔   |    ✔    |   ✔   |
-|      Email auto handler     |    ✔    |  ✔  |  ✔  |   ✔   |    ✔    |   ✔   |
 |         File handler        |    ✔    |  ✔  |  ❌  |   ✔   |    ✔    |   ✔   |
 |         Http handler        |    ✔    |  ✔  |  ✔  |   ✔   |    ✔    |   ✔   |
-|        Sentry handler       |    ✔    |  ✔  |  ✔  |   ✔   |    ✔    |   ✔   |
 |        Slack handler        |    ✔    |  ✔  |  ✔  |   ✔   |    ✔    |   ✔   |
-|        Toast handler        |    ✔    |  ✔  |  ✔  |   ✔   |    ✔    |   ✔   |
 |        Custom handler       |    ✔    |  ✔  |  ✔  |   ✔   |    ✔    |   ✔   |
 |      Dialog report mode     |    ✔    |  ✔  |  ✔  |   ✔   |    ✔    |   ✔   |
 |       Page report mode      |    ✔    |  ✔  |  ✔  |   ✔   |    ✔    |   ✔   |

@@ -50,11 +50,8 @@ import 'package:catcher/catcher.dart';
 
 [Handlers](#handlers)  
 * [Console Handler](#console-handler)  
-* [Email Manual Handler](#email-manual-handler)  
-* [Email Auto Handler](#email-auto-handler)  
 * [Http Handler](#http-handler)  
 * [File Handler](#file-handler)  
-* [Sentry Handler](#sentry-handler)
 * [Slack Handler](#slack-handler)
 * [Discord Handler](#discord-handler)
 * [Crashlytics Handler](#crashlytics-handler)
@@ -92,7 +89,26 @@ main() {
       
   /// Release configuration. Same as above, but once user accepts dialog, user will be prompted to send email with crash to support.
   CatcherOptions releaseOptions = CatcherOptions(DialogReportMode(), [
-    EmailManualHandler(["support@email.com"])
+    CrashlyticsHandler(
+        crashlyticsReport: (String reportMessage, Report report) async {
+          await Future<void>.delayed(Duration(seconds: 5));
+
+          //add crashylitics like this to send data
+          // final crashlytics = FirebaseCrashlytics.instance;
+          // crashlytics.setCrashlyticsCollectionEnabled(true);
+          // crashlytics.log(reportMessage);
+          // if (report.errorDetails != null) {
+          //   await crashlytics.recordFlutterError(
+          //     report.errorDetails as FlutterErrorDetails,
+          //   );
+          // } else {
+          //   await crashlytics.recordError(
+          //     report.error,
+          //     report.stackTrace as StackTrace,
+          //   );
+          // }
+        },
+      ),
   ]);
 
   /// STEP 2. Pass your root widget (MyApp) along with Catcher configuration:
@@ -259,7 +275,9 @@ main() {
   CatcherOptions debugOptions =
   CatcherOptions(DialogReportMode(), [ConsoleHandler()]);
   CatcherOptions releaseOptions = CatcherOptions(DialogReportMode(), [
-    EmailManualHandler(["recipient@email.com"])
+    HttpHandler(HttpRequestType.post,
+          Uri.parse("https://jsonplaceholder.typicode.com/posts"),
+          printLogs: true),
   ]);
   CatcherOptions profileOptions = CatcherOptions(
     NotificationReportMode(), [ConsoleHandler()],
@@ -343,131 +361,9 @@ There are build in support for languages:
 ```dart
 LocalizationOptions.buildDefaultEnglishOptions();
 ```
-* chinese
-```dart
-LocalizationOptions.buildDefaultChineseOptions();
-```
 * hindi
 ```dart
 LocalizationOptions.buildDefaultHindiOptions();
-```
-* spanish
-```dart
-LocalizationOptions.buildDefaultSpanishOptions();
-```
-* malay
-```dart
-LocalizationOptions.buildDefaultMalayOptions();
-```
-* russian
-```dart
-LocalizationOptions.buildDefaultRussianOptions();
-```
-* portuguese
-```dart
-LocalizationOptions.buildDefaultPortugueseOptions();
-```
-* french
-```dart
-LocalizationOptions.buildDefaultFrenchOptions();
-```
-* polish
-```dart
-LocalizationOptions.buildDefaultPolishOptions();
-```
-* italian
-```dart
-LocalizationOptions.buildDefaultItalianOptions();
-```
-* korean
-```dart
-LocalizationOptions.buildDefaultKoreanOptions();
-```
-* dutch
-```dart
-LocalizationOptions.buildDefaultDutchOptions();
-```
-
-Complete Example:
-```dart
-import 'package:flutter/material.dart';
-import 'package:catcher/catcher.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-
-main() {
-  CatcherOptions debugOptions = CatcherOptions(DialogReportMode(), [
-    ConsoleHandler(),
-    HttpHandler(HttpRequestType.post, Uri.parse("https://httpstat.us/200"),
-        printLogs: true)
-  ], localizationOptions: [
-    LocalizationOptions("pl",
-        notificationReportModeTitle: "Wystąpił błąd aplikacji",
-        notificationReportModeContent:
-            "Naciśnij tutaj aby wysłać raport do zespołu wpsarcia",
-        dialogReportModeTitle: "Błąd aplikacji",
-        dialogReportModeDescription:
-            "Wystąpił niespodziewany błąd aplikacji. Raport z błędem jest gotowy do wysłania do zespołu wsparcia. Naciśnij akceptuj aby wysłać raport lub odrzuć aby odrzucić raport.",
-        dialogReportModeAccept: "Akceptuj",
-        dialogReportModeCancel: "Odrzuć",
-        pageReportModeTitle: "Błąd aplikacji",
-        pageReportModeDescription:
-            "Wystąpił niespodziewany błąd aplikacji. Raport z błędem jest gotowy do wysłania do zespołu wsparcia. Naciśnij akceptuj aby wysłać raport lub odrzuć aby odrzucić raport.",
-        pageReportModeAccept: "Akceptuj",
-        pageReportModeCancel: "Odrzuć",
-    ) 
-  ]);
-  CatcherOptions releaseOptions = CatcherOptions(NotificationReportMode(), [
-    EmailManualHandler(["recipient@email.com"])
-  ]);
-
-  Catcher(rootWidget: MyApp(), debugConfig: debugOptions, releaseConfig: releaseOptions);
-}
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: Catcher.navigatorKey,
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en', 'US'),
-        const Locale('pl', 'PL'),
-      ],
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Plugin example app'),
-          ),
-          body: ChildWidget()),
-    );
-  }
-}
-
-class ChildWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: TextButton(
-            child: Text("Generate error"), onPressed: () => generateError()));
-  }
-
-  generateError() async {
-    throw "Test exception";
-  }
-}
-
 ```
 
 ### Report modes
@@ -597,34 +493,6 @@ I/flutter ( 5073): #10     _WidgetsFlutterBinding&BindingBase&GestureBinding.han
 ```
 
 * handleWhenRejected - should report be handled even if user rejects it
-
-
-#### Email Manual Handler
-Email manual handler can be used to send email manually by user. It opens default email application with prepared email.
-
-```dart
-EmailManualHandler(
-      ["email1@email.com", "email2@email.com"],
-      enableDeviceParameters: true,
-      enableStackTrace: true,
-      enableCustomParameters: true,
-      enableApplicationParameters: true,
-      sendHtml: true,
-      emailTitle: "Sample Title",
-      emailHeader: "Sample Header",
-      printLogs: true)
-```
-
-Email Manual Handler parameters:
-* recipients (required) - list of email addresses of recipients
-* enableDeviceParameters (optional) - see Console Handler description
-* enableStackTrace (optional) - see Console Handler description
-* enableCustomParameters (optional) - see Console Handler description
-* enableApplicationParameters (optional) - see Console Handler description
-* sendHtml (optional) - enable/disable html email formatting
-* emailTitle (optional) - set custom email title
-* emailHeader (optional) - set additional email text header
-* printLogs (optional) - enable/disable debug logs
 
 
 #### Http Handler
