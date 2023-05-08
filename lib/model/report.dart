@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 
 class Report {
   /// Error that has been caught
-  final dynamic error;
+  final Object? error;
 
   /// Stack trace of error
-  final dynamic stackTrace;
+  final StackTrace? stackTrace;
 
   /// Time when it was caught
   final DateTime dateTime;
@@ -33,7 +33,7 @@ class Report {
   final File? screenshot;
 
   /// Creates report instance
-  Report(
+  const Report(
     this.error,
     this.stackTrace,
     this.dateTime,
@@ -53,7 +53,7 @@ class Report {
     bool enableCustomParameters = false,
   }) {
     final Map<String, dynamic> json = <String, dynamic>{
-      "error": error.toString(),
+      "error": error?.toString(),
       "customParameters": customParameters,
       "dateTime": dateTime.toIso8601String(),
       "platformType": describeEnum(platformType),
@@ -65,7 +65,7 @@ class Report {
       json["applicationParameters"] = applicationParameters;
     }
     if (enableStackTrace) {
-      json["stackTrace"] = stackTrace.toString();
+      json["stackTrace"] = stackTrace?.toString();
     }
     if (enableCustomParameters) {
       json["customParameters"] = customParameters;
