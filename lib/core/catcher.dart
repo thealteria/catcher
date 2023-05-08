@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:catcher/core/application_profile_manager.dart';
 import 'package:catcher/core/catcher_screenshot_manager.dart';
@@ -169,9 +168,9 @@ class Catcher with ReportModeAction {
   }
 
   void _setupLocalizationsOptionsInReportsHandler() {
-    _currentConfig.handlers.forEach((handler) {
+    for (var handler in _currentConfig.handlers) {
       handler.setLocalizationOptions(_localizationOptions);
-    });
+    }
   }
 
   Future _setupErrorHooks() async {
@@ -179,15 +178,16 @@ class Catcher with ReportModeAction {
       _reportError(details.exception, details.stack, errorDetails: details);
     };
 
-    Isolate.current.addErrorListener(
-      RawReceivePort((dynamic pair) async {
-        final isolateError = pair as List<dynamic>;
-        _reportError(
-          isolateError.first.toString(),
-          isolateError.last.toString(),
-        );
-      }).sendPort,
-    );
+    // Isolate.current.addErrorListener(
+    //   RawReceivePort((pair) async {
+    //     final isolateError = pair as List<dynamic>;
+    //     CatcherLogger.fine('isolateError: $isolateError');
+    //     _reportError(
+    //       isolateError.first.toString(),
+    //       StackTrace.fromString(isolateError.last.toString()),
+    //     );
+    //   }).sendPort,
+    // );
 
     if (rootWidget != null) {
       _runZonedGuarded(() {
@@ -233,9 +233,9 @@ class Catcher with ReportModeAction {
 
   ///Remove excluded parameters from device parameters.
   void _removeExcludedParameters() {
-    _currentConfig.excludedParameters.forEach((parameter) {
+    for (var parameter in _currentConfig.excludedParameters) {
       _deviceParameters.remove(parameter);
-    });
+    }
   }
 
   void _loadAndroidParameters(AndroidDeviceInfo androidDeviceInfo) {
@@ -353,17 +353,19 @@ class Catcher with ReportModeAction {
 
   /// Report checked error (error caught in try-catch block). Catcher will treat
   /// this as normal exception and pass it to handlers.
-  static void reportCheckedError(dynamic error, dynamic stackTrace) {
-    dynamic errorValue = error;
-    dynamic stackTraceValue = stackTrace;
-    errorValue ??= "undefined error";
-    stackTraceValue ??= StackTrace.current;
-    _instance._reportError(error, stackTrace);
+  static void reportCheckedError({
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
+    _instance._reportError(
+      error ?? 'undefined error',
+      stackTrace,
+    );
   }
 
   void _reportError(
-    dynamic error,
-    dynamic stackTrace, {
+    Object error,
+    StackTrace? stackTrace, {
     FlutterErrorDetails? errorDetails,
   }) async {
     if (errorDetails?.silent == true &&
@@ -385,7 +387,7 @@ class Catcher with ReportModeAction {
 
     final Report report = Report(
       error,
-      stackTrace,
+      stackTrace ?? StackTrace.current,
       DateTime.now(),
       _deviceParameters,
       _applicationParameters,
@@ -510,6 +512,7 @@ class Catcher with ReportModeAction {
       CatcherLogger.warning(
         "Error occurred in ${reportHandler.toString()}: ${handlerError.toString()}",
       );
+      return false;
     }).then((result) {
       CatcherLogger.fine(
         "${reportHandler.reportHandlerName()} result: $result",
@@ -521,12 +524,16 @@ class Catcher with ReportModeAction {
       } else {
         _cachedReports.remove(report);
       }
+
+      return result;
     }).timeout(
       Duration(milliseconds: _currentConfig.handlerTimeout),
       onTimeout: () {
         CatcherLogger.warning(
           "${reportHandler.reportHandlerName()} failed to report error because of timeout",
         );
+
+        return false;
       },
     );
   }
