@@ -21,3 +21,4 @@ android/.gradle
 flutter_export_environment.sh
 *.lock
 .vscode
+.fvm/flutter_sdk
