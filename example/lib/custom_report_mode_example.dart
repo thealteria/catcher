@@ -12,15 +12,17 @@ void main() {
   ]);
 
   Catcher(
-    rootWidget: MyApp(),
+    rootWidget: const MyApp(),
     debugConfig: debugOptions,
     releaseConfig: releaseOptions,
   );
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -37,19 +39,19 @@ class _MyAppState extends State<MyApp> {
           appBar: AppBar(
             title: const Text('Plugin example app'),
           ),
-          body: ChildWidget()),
+          body: const ChildWidget()),
     );
   }
 }
 
 class ChildWidget extends StatelessWidget {
+  const ChildWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextButton(
-        child: Text("Generate error"),
-        onPressed: () => generateError(),
-      ),
+    return TextButton(
+      child: const Text("Generate error"),
+      onPressed: () => generateError(),
     );
   }
 
@@ -66,11 +68,16 @@ class CustomPageReportMode extends ReportMode {
     }
   }
 
-  void _navigateToPageWidget(Report report, BuildContext context) async {
-    await Future<void>.delayed(Duration.zero);
-    Navigator.push<void>(
-      context,
-      MaterialPageRoute(builder: (context) => CustomPage(this, report)),
+  Future<void> _navigateToPageWidget(
+      Report report, BuildContext context) async {
+    await Future<void>.delayed(
+      Duration.zero,
+      () {
+        Navigator.push<void>(
+          context,
+          MaterialPageRoute(builder: (context) => CustomPage(this, report)),
+        );
+      },
     );
   }
 
@@ -88,30 +95,31 @@ class CustomPage extends StatelessWidget {
   final ReportMode reportMode;
   final Report report;
 
-  CustomPage(this.reportMode, this.report);
+  const CustomPage(this.reportMode, this.report, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Test"),
-        ),
-        body: Container(
-          child: Row(children: [
-            ElevatedButton(
-              child: Text("Send report"),
-              onPressed: () {
-                reportMode.onActionConfirmed(report);
-              },
-            ),
-            ElevatedButton(
-              child: Text("Cancel report"),
-              onPressed: () {
-                reportMode.onActionRejected(report);
-                Navigator.pop(context);
-              },
-            )
-          ]),
-        ));
+      appBar: AppBar(
+        title: const Text("Test"),
+      ),
+      body: Row(
+        children: [
+          ElevatedButton(
+            child: const Text("Send report"),
+            onPressed: () {
+              reportMode.onActionConfirmed(report);
+            },
+          ),
+          ElevatedButton(
+            child: const Text("Cancel report"),
+            onPressed: () {
+              reportMode.onActionRejected(report);
+              Navigator.pop(context);
+            },
+          )
+        ],
+      ),
+    );
   }
 }

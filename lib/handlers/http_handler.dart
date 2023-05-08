@@ -36,14 +36,14 @@ class HttpHandler extends ReportHandler {
   }) : headers = headers ?? <String, dynamic>{};
 
   @override
-  Future<bool> handle(Report error, BuildContext? context) async {
+  Future<bool> handle(Report report, BuildContext? context) async {
     if (!(await CatcherUtils.isInternetConnectionAvailable())) {
       _printLog("No internet connection available");
       return false;
     }
 
     if (requestType == HttpRequestType.post) {
-      return _sendPost(error);
+      return _sendPost(report);
     }
     return true;
   }
@@ -63,8 +63,8 @@ class HttpHandler extends ReportHandler {
       }
 
       final Options options = Options(
-        sendTimeout: requestTimeout ?? Duration(milliseconds: 5000),
-        receiveTimeout: responseTimeout ?? Duration(milliseconds: 5000),
+        sendTimeout: requestTimeout ?? const Duration(milliseconds: 5000),
+        receiveTimeout: responseTimeout ?? const Duration(milliseconds: 5000),
         headers: mutableHeaders,
       );
 

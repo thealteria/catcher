@@ -19,7 +19,7 @@ void main() {
 
   Catcher(
     runAppFunction: () {
-      runApp(MyApp());
+      runApp(const MyApp());
     },
     debugConfig: debugOptions,
     releaseConfig: releaseOptions,
@@ -27,8 +27,10 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -48,11 +50,11 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: [
             TextButton(
-              child: Text("Generate normal error"),
+              child: const Text("Generate normal error"),
               onPressed: () => generateNormalError(),
             ),
             TextButton(
-              child: Text("Generate filtered error"),
+              child: const Text("Generate filtered error"),
               onPressed: () => generateFilteredError(),
             ),
           ],

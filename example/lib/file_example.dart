@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
-  var catcher = Catcher(rootWidget: MyApp(), ensureInitialized: true);
+  var catcher = Catcher(rootWidget: const MyApp(), ensureInitialized: true);
   Directory? externalDir;
   if (Platform.isAndroid || Platform.isIOS) {
     externalDir = await getExternalStorageDirectory();
@@ -16,9 +16,9 @@ void main() async {
   }
   String path = "";
   if (externalDir != null) {
-    path = externalDir.path.toString() + "/log.txt";
+    path = "${externalDir.path}/log.txt";
   }
-  CatcherLogger.fine("PATH: " + path);
+  CatcherLogger.fine("PATH: $path");
 
   CatcherOptions debugOptions = CatcherOptions(
       DialogReportMode(), [FileHandler(File(path), printLogs: true)]);
@@ -29,8 +29,10 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -47,27 +49,27 @@ class _MyAppState extends State<MyApp> {
           appBar: AppBar(
             title: const Text('Plugin example app'),
           ),
-          body: ChildWidget()),
+          body: const ChildWidget()),
     );
   }
 }
 
 class ChildWidget extends StatelessWidget {
+  const ChildWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          TextButton(
-            child: Text("Check permission"),
-            onPressed: checkPermissions,
-          ),
-          TextButton(
-            child: Text("Generate error"),
-            onPressed: () => generateError(),
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        TextButton(
+          onPressed: checkPermissions,
+          child: const Text("Check permission"),
+        ),
+        TextButton(
+          child: const Text("Generate error"),
+          onPressed: () => generateError(),
+        )
+      ],
     );
   }
 

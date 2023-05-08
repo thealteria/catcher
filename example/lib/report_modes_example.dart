@@ -20,12 +20,14 @@ void main() {
 
   CatcherOptions debugOptions = CatcherOptions(reportMode, [ConsoleHandler()]);
 
-  Catcher(rootWidget: MyApp(), debugConfig: debugOptions);
+  Catcher(rootWidget: const MyApp(), debugConfig: debugOptions);
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -42,17 +44,20 @@ class _MyAppState extends State<MyApp> {
           appBar: AppBar(
             title: const Text('Plugin example app'),
           ),
-          body: ChildWidget()),
+          body: const ChildWidget()),
     );
   }
 }
 
 class ChildWidget extends StatelessWidget {
+  const ChildWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: TextButton(
-            child: Text("Generate error"), onPressed: () => generateError()));
+    return TextButton(
+      child: const Text("Generate error"),
+      onPressed: () => generateError(),
+    );
   }
 
   void generateError() async {

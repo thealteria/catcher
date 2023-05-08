@@ -47,7 +47,7 @@ class CatcherErrorWidget extends StatelessWidget {
   Widget _buildNormalErrorWidget() {
     return Center(
       child: ListView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         children: [
           _buildIcon(),
           Text(

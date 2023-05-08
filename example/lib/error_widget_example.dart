@@ -12,15 +12,17 @@ void main() {
   ]);
 
   Catcher(
-    rootWidget: MyApp(),
+    rootWidget: const MyApp(),
     debugConfig: debugOptions,
     releaseConfig: releaseOptions,
   );
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -57,7 +59,7 @@ class _MyAppState extends State<MyApp> {
 
   ///Trigger "small" mode
   Widget _buildSmallErrorWidget() {
-    return GridView.count(crossAxisCount: 3, children: [
+    return GridView.count(crossAxisCount: 3, children: const [
       ChildWidget(),
       ChildWidget(),
       ChildWidget(),
@@ -66,11 +68,11 @@ class _MyAppState extends State<MyApp> {
 }
 
 class ChildWidget extends StatelessWidget {
+  const ChildWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextButton(child: Text("Test"), onPressed: generateError),
-    );
+    return TextButton(onPressed: generateError, child: const Text("Test"));
   }
 
   void generateError() async {

@@ -16,14 +16,16 @@ void main() {
   ]);
 
   Catcher(
-      rootWidget: MyApp(),
+      rootWidget: const MyApp(),
       debugConfig: debugOptions,
       releaseConfig: releaseOptions);
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -36,9 +38,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return CupertinoApp(
       navigatorKey: Catcher.navigatorKey,
-      home: CupertinoPageScaffold(
+      home: const CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: const Text('Cupertino example'),
+          middle: Text('Cupertino example'),
         ),
         child: SafeArea(
           child: ChildWidget(),
@@ -49,12 +51,14 @@ class _MyAppState extends State<MyApp> {
 }
 
 class ChildWidget extends StatelessWidget {
+  const ChildWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.orange,
       child: TextButton(
-        child: Text("Generate error"),
+        child: const Text("Generate error"),
         onPressed: () => generateError(),
       ),
     );

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 late Catcher catcher;
 
 void main() {
-  Map<String, dynamic> customParameters = new Map<String, dynamic>();
+  Map<String, dynamic> customParameters = <String, dynamic>{};
   customParameters["First"] = "First parameter";
   CatcherOptions debugOptions = CatcherOptions(
       PageReportMode(),
@@ -19,15 +19,17 @@ void main() {
   ]);
 
   catcher = Catcher(
-    rootWidget: MyApp(),
+    rootWidget: const MyApp(),
     debugConfig: debugOptions,
     releaseConfig: releaseOptions,
   );
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -44,22 +46,26 @@ class _MyAppState extends State<MyApp> {
           appBar: AppBar(
             title: const Text('Plugin example app'),
           ),
-          body: ChildWidget()),
+          body: const ChildWidget()),
     );
   }
 }
 
 class ChildWidget extends StatelessWidget {
+  const ChildWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(children: [
-      ElevatedButton(
-          child: Text("Change custom parameters"),
-          onPressed: _changeCustomParameters),
-      ElevatedButton(
-          child: Text("Generate error"), onPressed: () => generateError())
-    ]));
+    return Column(
+      children: [
+        ElevatedButton(
+            onPressed: _changeCustomParameters,
+            child: const Text("Change custom parameters")),
+        ElevatedButton(
+            child: const Text("Generate error"),
+            onPressed: () => generateError())
+      ],
+    );
   }
 
   void generateError() async {

@@ -19,15 +19,17 @@ void main() {
   ]);
 
   Catcher(
-    rootWidget: MyApp(),
+    rootWidget: const MyApp(),
     debugConfig: debugOptions,
     releaseConfig: releaseOptions,
   );
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -44,32 +46,34 @@ class _MyAppState extends State<MyApp> {
           appBar: AppBar(
             title: const Text('Plugin example app'),
           ),
-          body: ChildWidget()),
+          body: const ChildWidget()),
     );
   }
 }
 
 class ChildWidget extends StatelessWidget {
+  const ChildWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(children: <Widget>[
+    return Column(
+      children: <Widget>[
         TextButton(
-            child: Text("Generate first error"),
+            child: const Text("Generate first error"),
             onPressed: () => generateFirstError()),
         TextButton(
-          child: Text("Generate second error"),
+          child: const Text("Generate second error"),
           onPressed: () => generateSecondError(),
-        )
-      ]),
+        ),
+      ],
     );
   }
 
   void generateFirstError() async {
-    throw new FormatException("Example Error");
+    throw const FormatException("Example Error");
   }
 
   void generateSecondError() async {
-    throw new ArgumentError("Normal error");
+    throw ArgumentError("Normal error");
   }
 }

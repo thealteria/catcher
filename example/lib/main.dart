@@ -27,7 +27,7 @@ void main() {
       ///Send logs to Crashlytics
       CrashlyticsHandler(
         crashlyticsReport: (String reportMessage, Report report) async {
-          await Future<void>.delayed(Duration(seconds: 5));
+          await Future<void>.delayed(const Duration(seconds: 5));
 
           //add crashylitics like this to send data
           // final crashlytics = FirebaseCrashlytics.instance;
@@ -55,7 +55,7 @@ void main() {
   ///error to your configured services!
   Catcher(
     runAppFunction: () {
-      runApp(MyApp());
+      runApp(const MyApp());
     },
     debugConfig: debugOptions,
     releaseConfig: releaseOptions,
@@ -64,8 +64,10 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -84,20 +86,20 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text("Catcher example"),
         ),
-        body: ChildWidget(),
+        body: const ChildWidget(),
       ),
     );
   }
 }
 
 class ChildWidget extends StatelessWidget {
+  const ChildWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextButton(
-        child: Text("Generate error"),
-        onPressed: () => generateError(),
-      ),
+    return TextButton(
+      child: const Text("Generate error"),
+      onPressed: () => generateError(),
     );
   }
 
