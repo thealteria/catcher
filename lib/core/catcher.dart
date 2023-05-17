@@ -398,7 +398,7 @@ class Catcher with ReportModeAction {
     );
 
     if (_isReportInReportsOccurencesMap(report)) {
-      CatcherLogger.fine(
+      CatcherLogger.error(
         "Error: '$error' has been skipped to due to duplication occurence within ${_currentConfig.reportOccurrenceTimeout} ms.",
       );
       return;
@@ -406,7 +406,7 @@ class Catcher with ReportModeAction {
 
     if (_currentConfig.filterFunction != null &&
         _currentConfig.filterFunction!(report) == false) {
-      CatcherLogger.fine(
+      CatcherLogger.error(
         "Error: '$error' has been filtered from Catcher logs. Report will be skipped.",
       );
       return;
