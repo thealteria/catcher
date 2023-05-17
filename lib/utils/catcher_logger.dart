@@ -14,6 +14,8 @@ enum LogLevel {
 
 ///Class used to provide logger for Catcher. Only print logs in [kDebugMode]
 class CatcherLogger {
+  static const CatcherLogger _singleton = CatcherLogger._();
+  factory CatcherLogger() => _singleton;
   const CatcherLogger._();
 
   static void _log(
@@ -21,7 +23,8 @@ class CatcherLogger {
     String message,
   ) {
     if (kDebugMode) {
-      if (level == LogLevel.error) {
+      final isError = message.toLowerCase().contains('error');
+      if (level == LogLevel.error || isError) {
         log(
           '',
           level: 1000,
