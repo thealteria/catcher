@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
@@ -32,12 +33,24 @@ class CatcherLogger {
           error: '[${DateTime.now()} | ${level.name.toUpperCase()}] $message',
         );
       } else {
-        debugPrint(
-          '\x1b[${level.ansiCode}m[${DateTime.now()} | Catcher | '
-          '${level.name.toUpperCase()}] $message\x1b[0m',
-        );
+        if (Platform.isIOS) {
+          log(
+            __log(level, message),
+            name: '\x1b[${level.ansiCode}mCatcher\x1B[0m',
+          );
+        } else {
+          debugPrintThrottled(__log(level, message));
+        }
       }
     }
+  }
+
+  static String __log(
+    LogLevel level,
+    String message,
+  ) {
+    return '\x1b[${level.ansiCode}m[${DateTime.now()} | Catcher | '
+        '${level.name.toUpperCase()}] $message\x1b[0m';
   }
 
   ///Log error message.
